@@ -1,0 +1,10 @@
+body {
+    background-color: #039;
+    overflow: hidden;
+}
+
+div, p {
+    margin: 0px;
+    padding: 0px;
+}
+
