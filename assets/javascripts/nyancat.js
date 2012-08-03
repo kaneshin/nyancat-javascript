@@ -214,7 +214,7 @@ var CanvasManager = function(canvas) {
   };
 
   return that;
-}
+};
 
 /*
  * Rainbow
@@ -251,6 +251,8 @@ var Rainbow = function(spec, canvas) {
           case 3:
             y_pos[i] = y0 - reverse * weight;
             break;
+          default:
+            break;
         }
       }
       for(var i = 0, x = x0, y; i < number; i++) {
@@ -273,7 +275,7 @@ var Rainbow = function(spec, canvas) {
   };
 
   return that;
-}
+};
 
 /*
  * Nyancat
@@ -319,6 +321,8 @@ var Nyancat = function(spec, canvas) {
             case 0: // transparent
               context.fillStyle = 'rgba(0,0,0,0)';
               break;
+            default:
+              break;
           }
         context.fillRect(x + j * dot, y + i * dot, dot, dot);
         }
@@ -327,11 +331,11 @@ var Nyancat = function(spec, canvas) {
       if (k > nyancat_data_nr - 1) {
         k = 0;
       }
-    },
+    }
   };
 
   return that;
-}
+};
 
 /*
  * Particle
@@ -365,6 +369,8 @@ var Particle = function(spec, canvas) {
               break;
             case 0:
               break;
+            default:
+              break;
           }
         }
       }
@@ -374,11 +380,11 @@ var Particle = function(spec, canvas) {
         x = (width + x_range) * Math.random() + x_range;
         y = height * Math.random();
       }
-    },
+    }
   };
 
   return that;
-}
+};
 
 var cvs = getCanvasById('nyancat');
 
