@@ -1,12 +1,19 @@
 body {
-    padding: 0;
+    width: 100%;
     margin: 0;
+    padding: 0;
     background-color: #039;
-    overflow: hidden;
+}
+
+#canvas {
+    min-width: 1000px;
+    min-height: 640px;
+    margin: 0 auto;
+    padding: 0;
 }
 
 canvas {
-    padding: 0;
     margin: 0;
+    padding: 0;
 }
 

@@ -9,8 +9,23 @@
         <script src="assets/javascripts/canvas.js"></script>
     </head>
     <body>
-        <canvas id="nyancat" width="640" height="640"></canvas>
-        <script src="assets/javascripts/nyancat.js"></script>
+        <div id="canvas">
+            <canvas id="nyancat" width="1000" height="640">
+                You need to use a browser with html5 for canvas.
+            </canvas>
+            <script src="assets/javascripts/nyancat.js"></script>
+            <script type="text/javascript">
+                var canvas = getCanvasById("nyancat");
+                var ncc = new NyanCatCanvas({
+                    x: 400
+                  , y: 300
+                  , dot: 10
+                  , particle_nr: 10
+                }, canvas);
+                ncc.init();
+                ncc.start();
+            </script>
+        </div>
     </body>
 </html>
 

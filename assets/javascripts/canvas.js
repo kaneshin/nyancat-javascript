@@ -2,6 +2,7 @@
  * vim:set fdm=marker:
  *
  * File:        canvas.js
+ * Version      0.1.0
  * Maintainer:  Shintaro Kaneko <kaneshin0120@gmail.com>
  * Last Change: 04-Aug-2012.
  */
@@ -10,17 +11,14 @@
  * getCanvasById
  */
 var getCanvasById = function(id) {
-  var canvas = {}
-    , el = document.getElementById(id)
-    ;
-  canvas = {
+  var el = document.getElementById(id);
+  return {
       self: el
     , context: el.getContext("2d")
     , width: el.width
     , height: el.height
     , bg_color: "rgba(0,0,0,0)"
   };
-  return canvas;
 };
 
 /*
@@ -43,7 +41,7 @@ var CanvasManager = function(canvas) {
     },
     setBackgroundColor: function(color) {
       bg_color = color || "rgba(0,0,0,0)";
-    },
+    }
   };
   return that;
 };

@@ -2,8 +2,12 @@
  * vim:set fdm=marker:
  *
  * File:        nyancat.js
+ * Version      0.1.0
  * Maintainer:  Shintaro Kaneko <kaneshin0120@gmail.com>
  * Last Change: 04-Aug-2012.
+ *
+ * NOTE:
+ *    Require: canvas.js
  */
 
 /*
@@ -409,22 +413,4 @@ var NyanCatCanvas = function(nyancat_spec, cvs) {
   return that;
 };
 /* }}} */
-
-var cvs = getCanvasById("nyancat");
-var nccanvas = new NyanCatCanvas({
-    x: 300
-  , y: 300
-  , dot: 9
-  , particle_nr: 10
-}, cvs);
-
-nccanvas.init();
-nccanvas.start();
-
-setTimeout(function() {
-  nccanvas.stop();
-  setTimeout(function() {
-    nccanvas.start();
-  }, 1000);
-}, 1000);
 
