@@ -4,7 +4,7 @@
  * File:        nyancat.js
  * Version      0.1.0
  * Maintainer:  Shintaro Kaneko <kaneshin0120@gmail.com>
- * Last Change: 04-Aug-2012.
+ * Last Change: 05-Aug-2012.
  *
  * NOTE:
  *    Require: canvas.js
@@ -66,17 +66,25 @@ var Particle = function(spec, canvas) {
     , width = canvas.width
     , height = canvas.height
     , k = spec.k
-    , color = spec.color
+    , color = 'rgba(' + spec.color + ',1)'
     , dot = spec.dot
-    , x_span = spec.x_span
-    , x_range = spec.x_range
+    , span = spec.span
+    , range = spec.range
     , particle_data_nr = particle_data.length
     , particle_data_lines = particle_data[0].length
     , particle_data_columns = particle_data[0][0].length
-    , x = (width + x_range) * Math.random() + x_range
-    , y = height * Math.random()
+    , x
+    , y
     ;
 
+  /* private function */
+  var init = function() {
+    x = (width + range) * Math.random() + range;
+    y = height * Math.random();
+  };
+
+  init();
+  /* public method */
   that = {
     draw: function () {
       context.fillStyle = color;
@@ -84,23 +92,24 @@ var Particle = function(spec, canvas) {
         for (var j = 0; j < particle_data_columns; j++) {
           switch (particle_data[k][i][j]) {
             case 1:
-              context.fillRect(
-                  x + i * dot - k * x_span, y + j * dot, dot, dot);
-              break;
-            case 0:
+              context.fillRect(x + i * dot - k * span, y + j * dot, dot, dot);
               break;
             default:
               break;
           }
         }
       }
-      k++;
-      if (k > particle_data_nr - 1) {
+      if (++k > particle_data_nr - 1) {
         k = 0;
-        x = (width + x_range) * Math.random() + x_range;
-        y = height * Math.random();
+        init();
       }
     },
+    setColor: function(c) {
+      color = 'rgba(' + c + ',1)' || 'rgba(255,255,255,1)';
+    },
+    setDotSize: function(d) {
+      dot = d || 1;
+    }
   };
   return that;
 };
@@ -234,67 +243,6 @@ var nyancat_data = [
 /* }}} */
 
 /*
- * NyanCat Class
- * {{{ */
-var NyanCat = function(spec, canvas) {
-  var that = {}
-    , context = canvas.context
-    , x = spec.x
-    , y = spec.y
-    , dot = spec.dot
-    , nyancat_data_nr = nyancat_data.length
-    , nyancat_data_lines = nyancat_data[0].length
-    , nyancat_data_columns = nyancat_data[0][0].length
-    , k = 0
-    ;
-
-  that = {
-    draw: function () {
-      for (var i = 0; i < nyancat_data_lines; i++) {
-        for (var j = 0; j < nyancat_data_columns; j++) {
-          switch (nyancat_data[k][i][j]) {
-            case 1: // #000000
-              context.fillStyle = 'rgb(0,0,0)';
-              break;
-            case 2: // #999999
-              context.fillStyle = 'rgb(153,153,153)';
-              break;
-            case 3: // #ff99cc
-              context.fillStyle = 'rgb(255,153,204)';
-              break;
-            case 4: // #ffcc99
-              context.fillStyle = 'rgb(255,204,153)';
-              break;
-            case 5: // #ffffff
-              context.fillStyle = 'rgb(255,255,255)';
-              break;
-            case 6: // #ff6699
-              context.fillStyle = 'rgb(255,102,153)';
-              break;
-            case 7: // #ff3399
-              context.fillStyle = 'rgb(255,51,153)';
-              break;
-            case 0:
-              context.fillStyle = 'rgba(0,0,0,0)';
-              break;
-            default:
-              context.fillStyle = 'rgba(0,0,0,0)';
-              break;
-          }
-        context.fillRect(x + j * dot, y + i * dot, dot, dot);
-        }
-      }
-      k++;
-      if (k > nyancat_data_nr - 1) {
-        k = 0;
-      }
-    },
-  };
-  return that;
-};
-/* }}} */
-
-/*
  * Rainbow
  * {{{ */
 var Rainbow = function(spec, canvas) {
@@ -307,8 +255,8 @@ var Rainbow = function(spec, canvas) {
     , x0 = spec.x0
     , y0 = spec.y0 - weight
     , number = x0 / width + 2 >> 0
-    , reverse = 1
     , step = weight / 2 >> 0
+    , reverse = 1
     , f = 0
     , fps_rainbow = 5
     , y_pos = new Array(number)
@@ -349,6 +297,110 @@ var Rainbow = function(spec, canvas) {
         f = 0;
         reverse = -reverse;
       }
+    },
+    setXY: function(x, y, d) {
+      x0 = x + d * 2;
+      y0 = y + d * 5;
+      number = x0 / width + 2 >> 0;
+    },
+    resize: function(x, y, d) {
+      x0 = x + d * 2;
+      y0 = y + d * 5;
+      width = d * 7;
+      weight = d * 2;
+      number = x0 / width + 2 >> 0;
+      step = weight / 2 >> 0;
+    }
+  };
+  return that;
+};
+/* }}} */
+
+/*
+ * NyanCat Class
+ * {{{ */
+var NyanCat = function(spec, canvas) {
+  var that = {}
+    , context = canvas.context
+    , x = spec.x
+    , y = spec.y
+    , dot = spec.dot
+    , nyancat_data_nr = nyancat_data.length
+    , nyancat_data_lines = nyancat_data[0].length
+    , nyancat_data_columns = nyancat_data[0][0].length
+    , k = 0
+    , rainbow
+    ;
+
+  var init = function() {
+    rainbow = new Rainbow({
+        x0 : x + dot * 2
+      , y0 : y + dot * 5
+      , width : dot * 7
+      , weight: dot * 2
+      , colors : [
+          'rgb(255, 0, 0)'    // red
+        , 'rgb(255, 153, 0)'  // orange
+        , 'rgb(255, 255, 0)'  // yellow
+        , 'rgb(0, 255, 0)'    // green
+        , 'rgb(0, 0, 255)'    // blue
+        , 'rgb(102, 0, 153)'  // purple
+      ]
+    }, canvas);
+  };
+  init();
+  that = {
+    draw: function () {
+      rainbow.draw();
+      for (var i = 0; i < nyancat_data_lines; i++) {
+        for (var j = 0; j < nyancat_data_columns; j++) {
+          switch (nyancat_data[k][i][j]) {
+            case 1: // #000000
+              context.fillStyle = 'rgb(0,0,0)';
+              break;
+            case 2: // #999999
+              context.fillStyle = 'rgb(153,153,153)';
+              break;
+            case 3: // #ff99cc
+              context.fillStyle = 'rgb(255,153,204)';
+              break;
+            case 4: // #ffcc99
+              context.fillStyle = 'rgb(255,204,153)';
+              break;
+            case 5: // #ffffff
+              context.fillStyle = 'rgb(255,255,255)';
+              break;
+            case 6: // #ff6699
+              context.fillStyle = 'rgb(255,102,153)';
+              break;
+            case 7: // #ff3399
+              context.fillStyle = 'rgb(255,51,153)';
+              break;
+            default:
+              context.fillStyle = 'rgba(0,0,0,0)';
+              break;
+          }
+          context.fillRect(x + j * dot, y + i * dot, dot, dot);
+        }
+      }
+      if (++k > nyancat_data_nr - 1) {
+        k = 0;
+      }
+    },
+    setXY: function(nx, ny) {
+      x = nx || 1;
+      y = ny || 1;
+      rainbow.setXY(x, y, dot);
+    },
+    setDotSize: function(d) {
+      dot = d || 1;
+      rainbow.resize(x, y, dot);
+    },
+    getCenterXY: function() {
+      return {
+          x: dot * nyancat_data_columns / 2 >> 0
+        , y: dot * nyancat_data_lines / 2 >> 0
+      };
     }
   };
   return that;
@@ -370,36 +422,27 @@ var NyanCatCanvas = function(nyancat_spec, cvs) {
     init: function() {
       canvas_mgr = new CanvasManager(cvs);
       canvas_mgr.setBackgroundColor("rgb(0,51,153)");
-      rainbow = new Rainbow({
-          x0 : nyancat_spec.x + nyancat_spec.dot * 2
-        , y0 : nyancat_spec.y + nyancat_spec.dot * 5
-        , width : nyancat_spec.dot * 7
-        , weight: nyancat_spec.dot * 2
-        , colors : [
-            'rgb(255, 0, 0)'    // red
-          , 'rgb(255, 153, 0)'  // orange
-          , 'rgb(255, 255, 0)'  // yellow
-          , 'rgb(0, 255, 0)'    // green
-          , 'rgb(0, 0, 255)'    // blue
-          , 'rgb(102, 0, 153)'  // purple
-        ]
-      }, cvs);
       nyancat = new NyanCat(nyancat_spec, cvs);
       particle = new Array(nyancat_spec.particle_nr);
       for (var i = 0; i < particle.length; i++) {
         particle[i] = new Particle({
             k: i % particle_data.length
-          , color: 'rgb(255, 255, 255)'
+          , color: '255,255,255'
           , dot: nyancat_spec.dot / 2 >> 0
-          , x_span: nyancat_spec.dot * 5
-          , x_range: nyancat_spec.dot * 10
+          , span: nyancat_spec.dot * 5
+          , range: nyancat_spec.dot * 10
         }, cvs);
       }
     },
     start: function() {
+      cvs.context.globalCompositeOperation = 'source-over';
+      cvs.self.onmousedown = function(event) {
+        var ctr = nyancat.getCenterXY();
+        nyancat.setXY(event.pageX-ctr.x, event.pageY-ctr.y);
+        nyancat.setDotSize(++nyancat_spec.dot);
+      };
       nyan_interval = setInterval(function () {
         canvas_mgr.fillCanvas();
-        rainbow.draw();
         nyancat.draw();
         for (var i = 0; i < particle.length; i++) {
           particle[i].draw();
