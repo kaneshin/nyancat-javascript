@@ -6,6 +6,9 @@
  * Last Change: 04-Aug-2012.
  */
 
+const FPS = 1000 / 15 >> 0;
+const FPS_RAINBOW = 1000 / 3 >> 0;
+
 /*
  * Particle bit pattern data
  * {{{ */
@@ -85,8 +88,6 @@ var Particle = function(spec, canvas) {
               break;
             case 0:
               break;
-            default:
-              break;
           }
         }
       }
@@ -98,8 +99,9 @@ var Particle = function(spec, canvas) {
       }
     },
   };
+
   return that;
-};
+}
 /* }}} */
 
 /*
@@ -270,10 +272,7 @@ var NyanCat = function(spec, canvas) {
             case 7: // #ff3399
               context.fillStyle = 'rgb(255,51,153)';
               break;
-            case 0:
-              context.fillStyle = 'rgba(0,0,0,0)';
-              break;
-            default:
+            case 0: // transparent
               context.fillStyle = 'rgba(0,0,0,0)';
               break;
           }
@@ -287,7 +286,7 @@ var NyanCat = function(spec, canvas) {
     },
   };
   return that;
-};
+}
 /* }}} */
 
 /*
@@ -303,10 +302,10 @@ var Rainbow = function(spec, canvas) {
     , x0 = spec.x0
     , y0 = spec.y0 - weight
     , number = x0 / width + 2 >> 0
+    , millis = 1000
     , reverse = 1
     , step = weight / 2 >> 0
-    , f = 0
-    , fps_rainbow = 5
+    , fps_rainbow = 1000 >> 3;
     , y_pos = new Array(number)
     ;
 
@@ -326,8 +325,6 @@ var Rainbow = function(spec, canvas) {
           case 5:
             y_pos[i] = y0 + reverse * weight;
             break;
-          default:
-            break;
         }
       }
       for(var i = 0, x = x0, y; i < number; i++) {
@@ -340,27 +337,25 @@ var Rainbow = function(spec, canvas) {
         y -= weight * color_nr;
         x -= width;
       }
+      millis += FPS;
       // reverse direction of rainbow
-      if (++f > fps_rainbow) {
-        f = 0;
+      if (millis > fps_rainbow) {
+        millis = 0;
         reverse = -reverse;
       }
     }
   };
+
   return that;
-};
+}
 /* }}} */
 
-/*
- * NyanCatCanvas Class
- * {{{ */
 var NyanCatCanvas = function(nyancat_spec, cvs) {
   var that = {}
     , canvas_mgr
     , rainbow
     , nyancat
     , particle
-    , fps = 1000 / 15 >> 0
     ;
   that = {
     init: function() {
@@ -400,7 +395,7 @@ var NyanCatCanvas = function(nyancat_spec, cvs) {
         for (var i = 0; i < particle.length; i++) {
           particle[i].draw();
         }
-      }, fps);
+      }, FPS);
     },
     stop: function() {
       clearInterval(nyan_interval);
@@ -408,14 +403,13 @@ var NyanCatCanvas = function(nyancat_spec, cvs) {
   };
   return that;
 };
-/* }}} */
 
 var cvs = getCanvasById("nyancat");
 var nccanvas = new NyanCatCanvas({
-    x: 300
-  , y: 300
-  , dot: 9
-  , particle_nr: 10
+    x: 450
+  , y: 390
+  , dot: 5
+  , particle_nr: 20
 }, cvs);
 
 nccanvas.init();
