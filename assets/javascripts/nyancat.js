@@ -4,7 +4,7 @@
  * File:        nyancat.js
  * Version      0.1.0
  * Maintainer:  Shintaro Kaneko <kaneshin0120@gmail.com>
- * Last Change: 05-Aug-2012.
+ * Last Change: 09-Aug-2012.
  *
  * NOTE:
  *    Require: canvas.js
@@ -54,13 +54,17 @@ var particle_data = [
   , [0, 0, 0, 0, 0, 0, 0]
   , [1, 0, 0, 0, 0, 0, 1]
   ]
-];
+]
+, particle_data_nr = particle_data.length
+, particle_data_lines = particle_data[0].length
+, particle_data_columns = particle_data[0][0].length
+;
 /* }}} */
 
 /*
  * Particle Class
  * {{{ */
-var Particle = function(spec, canvas) {
+var particle = function(spec, canvas) {
   var that = {}
     , context = canvas.context
     , width = canvas.width
@@ -70,20 +74,20 @@ var Particle = function(spec, canvas) {
     , dot = spec.dot
     , span = spec.span
     , range = spec.range
-    , particle_data_nr = particle_data.length
-    , particle_data_lines = particle_data[0].length
-    , particle_data_columns = particle_data[0][0].length
     , x
     , y
     ;
 
+  initialize();
   /* private function */
-  var init = function() {
+  function initialize() {
+    initXY();
+  }
+  function initXY() {
     x = (width + range) * Math.random() + range;
     y = height * Math.random();
-  };
+  }
 
-  init();
   /* public method */
   that = {
     draw: function () {
@@ -101,14 +105,14 @@ var Particle = function(spec, canvas) {
       }
       if (++k > particle_data_nr - 1) {
         k = 0;
-        init();
+        initXY();
       }
     },
-    setColor: function(c) {
-      color = 'rgba(' + c + ',1)' || 'rgba(255,255,255,1)';
+    setColor: function(_color) {
+      color = 'rgba(' + _color + ',1)' || 'rgba(255,255,255,1)';
     },
-    setDotSize: function(d) {
-      dot = d || 1;
+    setDotSize: function(_dot) {
+      dot = _dot || 1;
     }
   };
   return that;
@@ -116,7 +120,7 @@ var Particle = function(spec, canvas) {
 /* }}} */
 
 /*
- * NyanCat bit pattern data
+ * nyancat bit pattern data
  * {{{ */
 var nyancat_data = [
   [[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0]
@@ -239,49 +243,79 @@ var nyancat_data = [
   ,[0,0,0,0,0,1,2,2,1,0,1,2,2,1,0,0,0,0,0,1,2,2,1,0,1,2,2,1,0,0,0,0,0]
   ,[0,0,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0,1,1,1,0,0,0,1,1,1,0,0,0,0,0]
   ]
-];
+]
+, nyancat_data_nr = nyancat_data.length
+, nyancat_data_lines = nyancat_data[0].length
+, nyancat_data_columns = nyancat_data[0][0].length
+;
 /* }}} */
 
 /*
- * Rainbow
+ * rainbow function
  * {{{ */
-var Rainbow = function(spec, canvas) {
+var rainbow = function(spec, canvas) {
   var that = {}
     , context = canvas.context
-    , colors = spec.colors
-    , color_nr = colors.length
-    , width = spec.width
-    , weight = spec.weight
-    , x0 = spec.x0
-    , y0 = spec.y0 - weight
-    , number = x0 / width + 2 >> 0
-    , step = weight / 2 >> 0
-    , reverse = 1
-    , f = 0
-    , fps_rainbow = 5
-    , y_pos = new Array(number)
+    , x0 = spec.x0, y0 = spec.y0, dot = spec.dot
+    , colors = spec.colors, color_nr = colors.length
+    , width, weight, number, step, reverse, f, fps_rainbow, y_pos
     ;
 
+  initialize();
+  /* private function */
+  function initialize() {
+    reverse = 1;
+    f = 0;
+    fps_rainbow = 5;
+    y_pos = new Array(number);
+    initXY(x0, y0, dot);
+    setWidth(dot);
+    setWeight(dot);
+    setNumber(width);
+    setStep(weight);
+  }
+  function initXY(x, y, dot) {
+    x0 = x + dot * 2;
+    y0 = y + dot * 3;
+  }
+  function setWidth(dot) {
+    width = dot * 7;
+  }
+  function setWeight(dot) {
+    weight = dot * 2;
+  }
+  function setNumber(width) {
+    number = x0 / width + 2 >> 0
+  }
+  function setStep(weight) {
+    step = weight / 2 >> 0
+  }
+  function setPosY() {
+    for (var i = 0; i < number; i++) {
+      switch (i % 6) {
+        case 0: case 4:
+          y_pos[i] = y0 + reverse * step;
+          break;
+        case 1: case 3:
+          y_pos[i] = y0;
+          break;
+        case 2:
+          y_pos[i] = y0 - reverse * step;
+          break;
+        case 5:
+          y_pos[i] = y0 + reverse * weight;
+          break;
+        default:
+          y_pos[i] = y0;
+          break;
+      }
+    }
+  }
+
+  /* public method */
   that = {
     draw: function() {
-      for (var i = 0; i < number; i++) {
-        switch (i % 6) {
-          case 0: case 4:
-            y_pos[i] = y0 + reverse * step;
-            break;
-          case 1: case 3:
-            y_pos[i] = y0;
-            break;
-          case 2:
-            y_pos[i] = y0 - reverse * step;
-            break;
-          case 5:
-            y_pos[i] = y0 + reverse * weight;
-            break;
-          default:
-            break;
-        }
-      }
+      setPosY();
       for(var i = 0, x = x0, y; i < number; i++) {
         y = y_pos[i];
         for (var color in colors) {
@@ -297,19 +331,17 @@ var Rainbow = function(spec, canvas) {
         f = 0;
         reverse = -reverse;
       }
-    },
-    setXY: function(x, y, d) {
-      x0 = x + d * 2;
-      y0 = y + d * 5;
-      number = x0 / width + 2 >> 0;
-    },
-    resize: function(x, y, d) {
-      x0 = x + d * 2;
-      y0 = y + d * 5;
-      width = d * 7;
-      weight = d * 2;
-      number = x0 / width + 2 >> 0;
-      step = weight / 2 >> 0;
+    }
+  , setXY: function(x, y, dot) {
+      initXY(x, y, dot);
+      setNumber(width)
+    }
+  , resize: function(x, y, dot) {
+      initXY(x, y, dot);
+      setWidth(dot);
+      setWeight(dot);
+      setNumber(width);
+      setStep(weight);
     }
   };
   return that;
@@ -317,27 +349,23 @@ var Rainbow = function(spec, canvas) {
 /* }}} */
 
 /*
- * NyanCat Class
+ * nyancat function
  * {{{ */
-var NyanCat = function(spec, canvas) {
+var nyancat = function(spec, canvas) {
   var that = {}
     , context = canvas.context
-    , x = spec.x
-    , y = spec.y
-    , dot = spec.dot
-    , nyancat_data_nr = nyancat_data.length
-    , nyancat_data_lines = nyancat_data[0].length
-    , nyancat_data_columns = nyancat_data[0][0].length
-    , k = 0
-    , rainbow
+    , x = spec.x, y = spec.y, dot = spec.dot
+    , k, my_rainbow
     ;
 
-  var init = function() {
-    rainbow = new Rainbow({
-        x0 : x + dot * 2
-      , y0 : y + dot * 5
-      , width : dot * 7
-      , weight: dot * 2
+  initialize();
+  /* private function */
+  function initialize() {
+    k = 0;
+    my_rainbow = rainbow({
+        x0 : x
+      , y0 : y
+      , dot: dot
       , colors : [
           'rgb(255, 0, 0)'    // red
         , 'rgb(255, 153, 0)'  // orange
@@ -347,56 +375,52 @@ var NyanCat = function(spec, canvas) {
         , 'rgb(102, 0, 153)'  // purple
       ]
     }, canvas);
-  };
-  init();
+  }
+  function getNyanColor(data) {
+    switch (data) {
+      case 1: // #000000
+        return 'rgb(0,0,0)';
+      case 2: // #999999
+        return 'rgb(153,153,153)';
+      case 3: // #ff99cc
+        return 'rgb(255,153,204)';
+      case 4: // #ffcc99
+        return 'rgb(255,204,153)';
+      case 5: // #ffffff
+        return 'rgb(255,255,255)';
+      case 6: // #ff6699
+        return 'rgb(255,102,153)';
+      case 7: // #ff3399
+        return 'rgb(255,51,153)';
+      default:
+        return 'rgba(0,0,0,0)';
+    }
+  }
+
+  /* public method */
   that = {
     draw: function () {
-      rainbow.draw();
-      for (var i = 0; i < nyancat_data_lines; i++) {
-        for (var j = 0; j < nyancat_data_columns; j++) {
-          switch (nyancat_data[k][i][j]) {
-            case 1: // #000000
-              context.fillStyle = 'rgb(0,0,0)';
-              break;
-            case 2: // #999999
-              context.fillStyle = 'rgb(153,153,153)';
-              break;
-            case 3: // #ff99cc
-              context.fillStyle = 'rgb(255,153,204)';
-              break;
-            case 4: // #ffcc99
-              context.fillStyle = 'rgb(255,204,153)';
-              break;
-            case 5: // #ffffff
-              context.fillStyle = 'rgb(255,255,255)';
-              break;
-            case 6: // #ff6699
-              context.fillStyle = 'rgb(255,102,153)';
-              break;
-            case 7: // #ff3399
-              context.fillStyle = 'rgb(255,51,153)';
-              break;
-            default:
-              context.fillStyle = 'rgba(0,0,0,0)';
-              break;
-          }
+      my_rainbow.draw();
+      for (var i = 0; i < nyancat_data_lines; ++i) {
+        for (var j = 0; j < nyancat_data_columns; ++j) {
+          context.fillStyle = getNyanColor(nyancat_data[k][i][j]);
           context.fillRect(x + j * dot, y + i * dot, dot, dot);
         }
       }
       if (++k > nyancat_data_nr - 1) {
         k = 0;
       }
-    },
-    setXY: function(nx, ny) {
-      x = nx || 1;
-      y = ny || 1;
-      rainbow.setXY(x, y, dot);
-    },
-    setDotSize: function(d) {
-      dot = d || 1;
-      rainbow.resize(x, y, dot);
-    },
-    getCenterXY: function() {
+    }
+  , setXY: function(_x, _y) {
+      x = _x || 1;
+      y = _y || 1;
+      my_rainbow.setXY(x, y, dot);
+    }
+  , setDotSize: function(_dot) {
+      dot = _dot || 1;
+      my_rainbow.resize(x, y, dot);
+    }
+  , getCenterXY: function() {
       return {
           x: dot * nyancat_data_columns / 2 >> 0
         , y: dot * nyancat_data_lines / 2 >> 0
@@ -408,24 +432,24 @@ var NyanCat = function(spec, canvas) {
 /* }}} */
 
 /*
- * NyanCatCanvas Class
+ * nyancatCanvas Class
  * {{{ */
-var NyanCatCanvas = function(nyancat_spec, cvs) {
+var nyancatCanvas = function(nyancat_spec, cvs) {
   var that = {}
     , canvas_mgr
     , rainbow
-    , nyancat
-    , particle
+    , meowcat
+    , particles
     , fps = 1000 / 15 >> 0
     ;
   that = {
     init: function() {
-      canvas_mgr = new CanvasManager(cvs);
+      canvas_mgr =jnew CanvasManager(cvs);
       canvas_mgr.setBackgroundColor("rgb(0,51,153)");
-      nyancat = new NyanCat(nyancat_spec, cvs);
-      particle = new Array(nyancat_spec.particle_nr);
-      for (var i = 0; i < particle.length; i++) {
-        particle[i] = new Particle({
+      meowcat = nyancat(nyancat_spec, cvs);
+      particles = new Array(nyancat_spec.particle_nr);
+      for (var i = 0; i < particles.length; i++) {
+        particles[i] = particle({
             k: i % particle_data.length
           , color: '255,255,255'
           , dot: nyancat_spec.dot / 2 >> 0
@@ -437,15 +461,15 @@ var NyanCatCanvas = function(nyancat_spec, cvs) {
     start: function() {
       cvs.context.globalCompositeOperation = 'source-over';
       cvs.self.onmousedown = function(event) {
-        var ctr = nyancat.getCenterXY();
-        nyancat.setXY(event.pageX-ctr.x, event.pageY-ctr.y);
-        nyancat.setDotSize(++nyancat_spec.dot);
+        var ctr = meowcat.getCenterXY();
+        meowcat.setXY(event.pageX-ctr.x, event.pageY-ctr.y);
+        meowcat.setDotSize(++nyancat_spec.dot);
       };
       nyan_interval = setInterval(function () {
         canvas_mgr.fillCanvas();
-        nyancat.draw();
-        for (var i = 0; i < particle.length; i++) {
-          particle[i].draw();
+        meowcat.draw();
+        for (var i = 0; i < particles.length; i++) {
+          particles[i].draw();
         }
       }, fps);
     },
