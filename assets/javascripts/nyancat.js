@@ -4,7 +4,7 @@
  * File:        nyancat.js
  * Version      0.1.0
  * Maintainer:  Shintaro Kaneko <kaneshin0120@gmail.com>
- * Last Change: 09-Aug-2012.
+ * Last Change: 12-Aug-2012.
  *
  * NOTE:
  *    Require: canvas.js
@@ -120,7 +120,7 @@ var particle = function(spec, canvas) {
 /* }}} */
 
 /*
- * nyancat bit pattern data
+ * NyanCat bit pattern data
  * {{{ */
 var nyancat_data = [
   [[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0]
@@ -434,7 +434,7 @@ var nyancat = function(spec, canvas) {
 /*
  * nyancatCanvas Class
  * {{{ */
-var nyancatCanvas = function(nyancat_spec, cvs) {
+var nyancat_canvas = function(nyancat_spec, cvs) {
   var that = {}
     , canvas_mgr
     , rainbow
@@ -444,7 +444,7 @@ var nyancatCanvas = function(nyancat_spec, cvs) {
     ;
   that = {
     init: function() {
-      canvas_mgr =jnew CanvasManager(cvs);
+      canvas_mgr = canvas_manager(cvs);
       canvas_mgr.setBackgroundColor("rgb(0,51,153)");
       meowcat = nyancat(nyancat_spec, cvs);
       particles = new Array(nyancat_spec.particle_nr);
@@ -462,7 +462,7 @@ var nyancatCanvas = function(nyancat_spec, cvs) {
       cvs.context.globalCompositeOperation = 'source-over';
       cvs.self.onmousedown = function(event) {
         var ctr = meowcat.getCenterXY();
-        meowcat.setXY(event.pageX-ctr.x, event.pageY-ctr.y);
+        meowcat.setXY(event.offsetX-ctr.x, event.offsetY-ctr.y);
         meowcat.setDotSize(++nyancat_spec.dot);
       };
       nyan_interval = setInterval(function () {

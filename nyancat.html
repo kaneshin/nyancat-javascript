@@ -9,24 +9,35 @@
         <script src="assets/javascripts/canvas.js"></script>
     </head>
     <body>
-        <div id="canvas">
-            <canvas id="nyancat" width="1000" height="640">
-                You need to use a browser with html5 for canvas.
-            </canvas>
-            <script src="assets/javascripts/nyancat.js"></script>
-            <script type="text/javascript">
-                var canvas = getCanvasById("nyancat");
-                var ncc = new nyancatCanvas({
-                    x: 400
-                  , y: 300
-                  , dot: 10
-                  , particle_nr: 10
-                }, canvas);
-                ncc.init();
-                ncc.start();
-                // ncc.stop();
-            </script>
-        </div>
+        <header>
+            <div id="header_title">
+                <h1>Nyan Cat</h1>
+            </div>
+        </header>
+        <section>
+            <div id="canvas">
+                <canvas id="nyancat" width="840" height="640">
+                    You need to use a browser with html5 for canvas.
+                </canvas>
+                <script src='assets/javascripts/nyancat.js'></script>
+                <script type="text/javascript">
+                    var canvas = getCanvasById("nyancat");
+                    var ncc = nyancat_canvas({
+                        x: 400
+                    , y: 300
+                    , dot: 10
+                    , particle_nr: 10
+                    }, canvas);
+                    ncc.init();
+                    ncc.start();
+                </script>
+            </div>
+        </section>
+        <footer>
+            <div id="copyright">
+                <p>Copyright (C) 2012 <a href="https://github.com/kaneshin/nyancat-javascript">kaneshin</a> All Rights Reserved.</p>
+            </div>
+        </footer>
     </body>
 </html>
 
