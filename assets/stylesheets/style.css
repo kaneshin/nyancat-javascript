@@ -9,7 +9,7 @@
 html {
     margin: 0; padding: 0;
     color: #000000;
-    font: normal 18px Verdana, Helvetica, Arial, sans-serif;
+    font: normal 22px 'Press Start 2P', cursive;
 }
 body {
     width: 100%;
@@ -45,7 +45,7 @@ canvas {
 header h1 {
     margin: 0 0 0.5em;
     padding-top: 0.5em;
-    font: bold 52px 'Press Start 2P', cursive;
+    font-size: 52px;
     text-align: center;
 }
 /* /=Header }}} */
@@ -53,13 +53,20 @@ header h1 {
 /* Section
  * {{{ */
 #canvas {
-    padding: 20px 30px;
+    padding: 10px 20px;
     background-color: #000;
-    border-radius: 25px;
-    -webkit-border-radius: 25px;
-    -moz-border-radius: 25px;
-    -o-border-radius: 25px;
-    -ms-border-radius: 25px;
+    border-radius: 15px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -o-border-radius: 15px;
+    -ms-border-radius: 15px;
+}
+#information {
+    color: #ffffff;
+    text-align: center;
+}
+#information p:first-child {
+    font-size: 18px;
 }
 /* /=Section }}} */
 

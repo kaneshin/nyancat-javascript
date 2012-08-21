@@ -6,30 +6,32 @@
         <meta name="Author" content="kaneshin">
         <meta http-equiv="Content-Script-Type" content="text/javascript">
         <link rel="stylesheet" href="assets/stylesheets/style.css" />
-        <script src="assets/javascripts/canvas.js"></script>
+        <script src='assets/javascripts/nyancat.js'></script>
     </head>
     <body>
         <header>
             <div id="header_title">
-                <h1>Nyan Cat</h1>
+                <h1>NYAN CAT</h1>
             </div>
         </header>
         <section>
             <div id="canvas">
-                <canvas id="nyancat" width="840" height="640">
+                <canvas id="nyancat" width="860" height="400">
                     You need to use a browser with html5 for canvas.
                 </canvas>
-                <script src='assets/javascripts/nyancat.js'></script>
+            </div>
+            <div id="information">
+                <p>YOU'VE NYANED FOR</p>
+                <p id="time">0.0</p>
+                <p>SECONDS</p>
                 <script type="text/javascript">
-                    var canvas = getCanvasById("nyancat");
-                    var ncc = nyancat_canvas({
-                        x: 400
-                    , y: 300
-                    , dot: 10
-                    , particle_nr: 10
-                    }, canvas);
-                    ncc.init();
-                    ncc.start();
+                    var ts = new Date().getTime(), tn, min, sec;
+                    setInterval(function() {
+                        tn = ("" + (new Date().getTime() - ts)).slice(0, -2);
+                        min = tn.slice(0, -1) == "" ? "0" : tn.slice(0, -1);
+                        sec = tn.slice(-1);
+                        document.getElementById("time").innerHTML = min + "." + sec;
+                    }, 100);
                 </script>
             </div>
         </section>
