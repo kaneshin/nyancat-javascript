@@ -1,7 +1,8 @@
 Nyan Cat
 ========
 
-- [Nyan Cat - kaneshinth.com](http://kaneshinth.com/nyancat)
+[Nyan Cat - kaneshinth.com](http://kaneshinth.com/nyancat)
+
 
                     ################################
                   ##%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%##
