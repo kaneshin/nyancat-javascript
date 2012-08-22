@@ -15,30 +15,33 @@
             </div>
         </header>
         <section>
+            <a href="https://github.com/kaneshin/nyancat-javascript">
+                <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub">
+            </a>
             <div id="canvas">
                 <canvas id="nyancat" width="860" height="400">
                     You need to use a browser with html5 for canvas.
                 </canvas>
+                <div id="canvas_controller">
+                    <img id="controller" src="assets/images/controller-pause.png" alt="" />
+                    <img id="camera" src="assets/images/camera.png" alt="" />
+                </div>
             </div>
-            <div id="information">
-                <p>YOU'VE NYANED FOR</p>
-                <p id="time">0.0</p>
-                <p>SECONDS</p>
-                <script type="text/javascript">
-                    var ts = new Date().getTime(), tn, min, sec;
-                    setInterval(function() {
-                        tn = ("" + (new Date().getTime() - ts)).slice(0, -2);
-                        min = tn.slice(0, -1) == "" ? "0" : tn.slice(0, -1);
-                        sec = tn.slice(-1);
-                        document.getElementById("time").innerHTML = min + "." + sec;
-                    }, 100);
-                </script>
+            <div id="store">
+                <img id="nyancat_img" src="" alt="" />
             </div>
         </section>
         <footer>
-            <div id="copyright">
-                <p>Copyright (C) 2012 <a href="https://github.com/kaneshin/nyancat-javascript">kaneshin</a> All Rights Reserved.</p>
+            <div id="twitter">
+                <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://kaneshinth.com/nyancat/" data-lang="en">Tweet</a>
+                <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
             </div>
+            <div id="copyright">
+                <p>Copyright (C) 2012 <a href="http://kaneshinth.com">kaneshin</a> All Rights Reserved.</p>
+            </div>
+            <a href="https://twitter.com/kaneshinth">
+                <img style="position:absolute;bottom:0;right:10px;border: 0;"src="http://api.twitter.com/1/users/profile_image?screen_name=kaneshinth&size=mini"alt="Follow me on Twitter">
+            </a>
         </footer>
     </body>
 </html>

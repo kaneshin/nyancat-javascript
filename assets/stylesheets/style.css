@@ -32,6 +32,7 @@ section {
 footer {
     width: 100%;
     margin: 0; padding: 0;
+    position: relative;
     z-index: 1;
 }
 canvas {
@@ -61,17 +62,29 @@ header h1 {
     -o-border-radius: 15px;
     -ms-border-radius: 15px;
 }
-#information {
-    color: #ffffff;
-    text-align: center;
+#canvas_controller img {
+    width: 64px;
+    height: 64px;
+    margin-top: 10px;
+    padding: 0 10px;
+    background-color: #fff;
 }
-#information p:first-child {
-    font-size: 18px;
+#store {
+    width: 0px;
+    height: 0px;
+    margin: 20px auto;
+    background-color: #fff;
+}
+#nyancat_img {
+    visibility: hidden;
 }
 /* /=Section }}} */
 
 /* Footer
  * {{{ */
+#twitter {
+    text-align: center;
+}
 #copyright p {
     margin-bottom: 20px;
     font: normal 14px Georgia, serif;

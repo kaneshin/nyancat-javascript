@@ -45,7 +45,6 @@
   document.stopCanvas = stopCanvas;
 })(window, document);
 
-/* Particle bit pattern data {{{ */
 var particle_data = [
   [[0,0,0,0,0,0,0]
   ,[0,0,0,0,0,0,0]
@@ -92,9 +91,7 @@ var particle_data = [
 , particle_data_lines = particle_data[0].length
 , particle_data_columns = particle_data[0][0].length
 ;
-/* }}} */
 
-/* NyanCat bit pattern data {{{ */
 var nyancat_data = [
   [[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0]
   ,[0,0,0,0,0,0,0,0,1,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,1,0,0,0,0,0,0,0]
@@ -221,9 +218,7 @@ var nyancat_data = [
 , nyancat_data_lines = nyancat_data[0].length
 , nyancat_data_columns = nyancat_data[0][0].length
 ;
-/* }}} */
 
-/* Particles Object {{{ */
 var particlesObject = function(spec, canvas) {
   var that = {}
     , context = canvas.context
@@ -277,9 +272,7 @@ var particlesObject = function(spec, canvas) {
   };
   return that;
 };
-/* }}} */
 
-/* NyanCat Object {{{ */
 var nyancatObject = function(spec, canvas) {
   var that = {}
     , context = canvas.context
@@ -348,9 +341,7 @@ var nyancatObject = function(spec, canvas) {
   };
   return that;
 };
-/* }}} */
 
-/* Rainbow Object {{{ */
 var rainbowObject = function(spec, canvas) {
   var that = {}
     , context = canvas.context
@@ -413,9 +404,7 @@ var rainbowObject = function(spec, canvas) {
   };
   return that;
 };
-/* }}} */
 
-// Your definition's area
 var main = function() {
   var canvasSpec = {
       'canvasId': 'nyancat'
@@ -440,60 +429,6 @@ var main = function() {
   canvasSpec.objects.nyancat.push(nyancatObject(nyancatSpec, cvs));
   canvasSpec.objects.nyancat.push(particlesObject(particlesSpec, cvs));
   document.drawCanvas(canvasSpec, 'nyancat');
-  // controller
-  var controller = document.getElementById("controller");
-  var draw_flag = true;
-  controller.addEventListener('mousedown', function() {
-    if (draw_flag) {
-      document.stopCanvas(canvasSpec);
-      controller.src = "assets/images/controller-play.png";
-      draw_flag = false;
-    } else {
-      document.drawCanvas(canvasSpec, 'nyancat');
-      controller.src = "assets/images/controller-pause.png";
-      draw_flag = true;
-    }
-  }, false);
-  // camera
-  var camera = document.getElementById("camera");
-  var store = document.getElementById("store");
-  var nyancat_img = document.getElementById("nyancat_img");
-  camera.addEventListener('mousedown', function() {
-    nyancat_img.style.visibility = 'visible';
-    store.style.padding = '10px 10px';
-    store.style.width = '860px';
-    store.style.height = store.style.height || '10px';
-    var id;
-    var h = 0;
-    function frame() {
-      h = parseInt(store.style.height.replace('px', ''), 10);
-      if (h >= 400) {
-        store.style.height = '400px';
-        clearInterval(id);
-        var o = 0;
-        nyancat_img.style.opacity = 0;
-        nyancat_img.src = cvs.self.toDataURL('image/png');
-        function imgframe() {
-          o += 0.1;
-          nyancat_img.style.opacity = o;
-          if (o >= 1) {
-            nyancat_img.style.opacity = 1;
-            clearInterval(id);
-          }
-        }
-        id = setInterval(imgframe, 10);
-      } else {
-        h += 15;
-        store.style.height = h + 'px';
-      }
-    }
-    id = setInterval(frame, 10);
-  }, false)
 };
 
 window.document.addEventListener('DOMContentLoaded', main, false);
-
-/*
- * vim:set ts=8 sts=2 sw=2 tw=0:
- * vim:set fdm=marker:
- */
